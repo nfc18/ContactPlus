@@ -30,14 +30,14 @@ jobs:
     - name: Build Docker images
       run: |
         echo "🔨 Building ContactPlus Docker images..."
-        docker-compose build --parallel
+        docker compose build --parallel
         
     - name: Run integration tests
       run: |
         echo "🧪 Running integration tests..."
         
         # Start services for testing
-        docker-compose up -d
+        docker compose up -d
         
         # Wait for services
         echo "⏳ Waiting for services to be ready..."
@@ -50,12 +50,12 @@ jobs:
           echo "✅ Services are healthy!"
         else
           echo "❌ Services failed health check"
-          docker-compose logs
+          docker compose logs
           exit 1
         fi
         
         # Stop test services
-        docker-compose down
+        docker compose down
         
     - name: Deployment Summary
       run: |
@@ -68,8 +68,7 @@ jobs:
         echo ""
         echo "🚀 To deploy locally on your Mac:"
         echo "   cd ~/Documents/Developer/Private/ContactPlus"
-        echo "   git pull origin main"
-        echo "   docker-compose up -d"
+        echo "   ./deploy.sh"
         echo ""
         echo "📊 Services will be available at:"
         echo "   - Web Interface: http://localhost:3000"
