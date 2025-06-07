@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContactPlus Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-healthy {
+            border-left: 4px solid #28a745;
+        }
+        .status-unhealthy {
+            border-left: 4px solid #dc3545;
+        }
+        .metric {
+            display: inline-block;
+            margin-right: 30px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .metric-label {
+            color: #666;
+            font-size: 14px;
+        }
+        .log-viewer {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .refresh-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .refresh-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ContactPlus System Monitor</h1>
+        
+        <div id="health-status" class="status-card">
+            <h2>System Health</h2>
+            <div id="health-content">Loading...</div>
+        </div>
+        
+        <div class="status-card">
+            <h2>Database Statistics</h2>
+            <div id="stats-content">Loading...</div>
+        </div>
+        
+        <div class="status-card">
+            <h2>System Logs</h2>
+            <button class="refresh-btn" onclick="refreshLogs()">Refresh Logs</button>
+            <div class="log-viewer" id="log-viewer">
+                Loading logs...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api/v1';
+        
+        async function fetchHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                const healthDiv = document.getElementById('health-status');
+                const contentDiv = document.getElementById('health-content');
+                
+                if (data.status === 'healthy') {
+                    healthDiv.className = 'status-card status-healthy';
+                    contentDiv.innerHTML = `
+                        <div class="metric">
+                            <div class="metric-value">✓ Healthy</div>
+                            <div class="metric-label">System Status</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${data.contacts_count}</div>
+                            <div class="metric-label">Active Contacts</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${new Date(data.timestamp).toLocaleTimeString()}</div>
+                            <div class="metric-label">Last Check</div>
+                        </div>
+                    `;
+                } else {
+                    healthDiv.className = 'status-card status-unhealthy';
+                    contentDiv.innerHTML = '<div class="metric-value">✗ Unhealthy</div>';
+                }
+            } catch (error) {
+                document.getElementById('health-content').innerHTML = 'Error fetching health status';
+            }
+        }
+        
+        async function fetchStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                const data = await response.json();
+                
+                let sourcesHtml = '';
+                if (data.contacts_by_source) {
+                    sourcesHtml = '<h4>Contacts by Source:</h4><ul>';
+                    for (const [source, count] of Object.entries(data.contacts_by_source)) {
+                        sourcesHtml += `<li>${source}: ${count} contacts</li>`;
+                    }
+                    sourcesHtml += '</ul>';
+                }
+                
+                document.getElementById('stats-content').innerHTML = `
+                    <div class="metric">
+                        <div class="metric-value">${data.total_contacts}</div>
+                        <div class="metric-label">Total Contacts</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">${data.active_contacts}</div>
+                        <div class="metric-label">Active Contacts</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">${data.total_operations}</div>
+                        <div class="metric-label">Total Operations</div>
+                    </div>
+                    ${sourcesHtml}
+                `;
+            } catch (error) {
+                document.getElementById('stats-content').innerHTML = 'Error fetching statistics';
+            }
+        }
+        
+        function refreshLogs() {
+            // In a real implementation, this would fetch actual logs
+            const mockLogs = [
+                `[${new Date().toISOString()}] INFO: System started`,
+                `[${new Date().toISOString()}] INFO: Database connected`,
+                `[${new Date().toISOString()}] INFO: Health check completed`,
+                `[${new Date().toISOString()}] INFO: Statistics updated`,
+                `[${new Date().toISOString()}] INFO: Monitoring active`
+            ];
+            
+            document.getElementById('log-viewer').innerHTML = mockLogs.join('<br>');
+        }
+        
+        // Initial load
+        fetchHealth();
+        fetchStats();
+        refreshLogs();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            fetchHealth();
+            fetchStats();
+        }, 30000);
+    </script>
+</body>
+</html>

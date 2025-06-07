@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Apple Inc.//iPhone OS 18.5//EN
+EMAIL;TYPE=INTERNET,pref:brian.fitzgerald@cognex.com
+EMAIL;TYPE=INTERNET:brian@anyline.com
+EMAIL;TYPE=INTERNET:karen.savage@anyline.com
+FN:Brian Fitzgerald
+N:Fitzgerald;Brian;;;
+NOTE:1\nEmail: brian.fitzgerald@anyline.com\nEmail: brian@anyline.com\nEmai
+ l: cim.bayer@anyline.io\nEmail: cim.bayer@anyline.com\n
+TEL;TYPE=CELL,VOICE,pref:+12035580815
+END:VCARD

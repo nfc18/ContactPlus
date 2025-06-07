@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Merge Review</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .match-group { background: white; margin: 20px 0; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .confidence { float: right; font-weight: bold; padding: 5px 10px; border-radius: 5px; }
+        .high-conf { background: #d4edda; color: #155724; }
+        .med-conf { background: #fff3cd; color: #856404; }
+        .low-conf { background: #f8d7da; color: #721c24; }
+        .contact { border: 1px solid #ddd; margin: 10px 0; padding: 10px; background: #f9f9f9; }
+        .source { font-weight: bold; color: #007bff; }
+        .field { margin: 5px 0; }
+        .field-label { font-weight: bold; display: inline-block; width: 100px; }
+        .match-reason { background: #e3f2fd; padding: 10px; margin: 10px 0; border-left: 4px solid #2196f3; }
+        .actions { margin-top: 20px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .merge-btn { background: #28a745; color: white; border: none; }
+        .separate-btn { background: #dc3545; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact Merge Review</h1>
+        <p>Review these potential matches and decide whether to merge or keep separate.</p>
+
+        <div class="match-group" id="group-0">
+            <div class="confidence high-conf">Confidence: 85%</div>
+            <h3>Potential Match #1</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> email<br>
+                <strong>Match Value:</strong> add@getpocket.com
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Add</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> add@getpocket.com</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> In Pocket Speichern</div>
+                <div class="field"><span class="field-label">Organization:</span> In Pocket Speichern</div>
+<div class="field"><span class="field-label">Emails:</span> add@getpocket.com</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> In Pocket Speichern</div>
+                <div class="field"><span class="field-label">Organization:</span> In Pocket Speichern</div>
+<div class="field"><span class="field-label">Emails:</span> add@getpocket.com</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Add</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> add@getpocket.com</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 0)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 0)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-1">
+            <div class="confidence high-conf">Confidence: 85%</div>
+            <h3>Potential Match #2</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> email<br>
+                <strong>Match Value:</strong> postermaster@anyline.io
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> 9yards Contact</div>
+                <div class="field"><span class="field-label">Organization:</span> Anyline</div>
+<div class="field"><span class="field-label">Emails:</span> postermaster@anyline.io, boston@anyline.com</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Internes Routing Ivr</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> postermaster@anyline.io, boston@anyline.com</div><div class="field"><span class="field-label">Phones:</span> +4313865252</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Ivr Sprachbox</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> postermaster@anyline.io, boston@anyline.com</div><div class="field"><span class="field-label">Phones:</span> +431386525286</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> 9yards Contact</div>
+                <div class="field"><span class="field-label">Organization:</span> Anyline</div>
+<div class="field"><span class="field-label">Emails:</span> postermaster@anyline.io, boston@anyline.com</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Invest</div>
+                <div class="field"><span class="field-label">Organization:</span> Anyline</div>
+<div class="field"><span class="field-label">Emails:</span> postermaster@anyline.io, boston@anyline.com</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 1)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 1)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-2">
+            <div class="confidence high-conf">Confidence: 85%</div>
+            <h3>Potential Match #3</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> email<br>
+                <strong>Match Value:</strong> engel@engelpr.de
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Andreas Engel</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> engel@engelpr.de</div><div class="field"><span class="field-label">Phones:</span> +4915751553000</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Engel@engelpr.de</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> engel@engelpr.de</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Andreas Engel</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> engel@engelpr.de</div><div class="field"><span class="field-label">Phones:</span> +4915751553000</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 2)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 2)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-3">
+            <div class="confidence high-conf">Confidence: 85%</div>
+            <h3>Potential Match #4</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> email<br>
+                <strong>Match Value:</strong> h@iis-labs.com
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> H</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> h@iis-labs.com</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Hannes Schmied</div>
+                <div class="field"><span class="field-label">Organization:</span> Cardskid</div>
+<div class="field"><span class="field-label">Emails:</span> h@iis-labs.com, hannes@cardskid.com</div><div class="field"><span class="field-label">Phones:</span> +43676847081810</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 3)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 3)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-4">
+            <div class="confidence high-conf">Confidence: 85%</div>
+            <h3>Potential Match #5</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> email<br>
+                <strong>Match Value:</strong> horst.pachler@gbg.graz.at
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Pachler Horst</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> horst.pachler@gbg.graz.at</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Dl (fh) Horst Pachler</div>
+                <div class="field"><span class="field-label">Organization:</span> Gbg Gebäude-und Baumanagement Graz GMBH Team Kompetenzcenter-energieeinkauf</div>
+<div class="field"><span class="field-label">Emails:</span> horst.pachler@gbg.graz.at</div><div class="field"><span class="field-label">Phones:</span> +433168728552, +433168728609, +43664608728552</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Pachler Horst</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> horst.pachler@gbg.graz.at</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Dl (fh) Horst Pachler</div>
+                <div class="field"><span class="field-label">Organization:</span> Gbg Gebäude-und Baumanagement Graz GMBH Team Kompetenzcenter-energieeinkauf</div>
+<div class="field"><span class="field-label">Emails:</span> horst.pachler@gbg.graz.at</div><div class="field"><span class="field-label">Phones:</span> +433168728609, +433168728552, +43664608728552</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 4)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 4)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-5">
+            <div class="confidence high-conf">Confidence: 85%</div>
+            <h3>Potential Match #6</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> email<br>
+                <strong>Match Value:</strong> lukas@anyline.com
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Lukas Kinigadner</div>
+                <div class="field"><span class="field-label">Organization:</span> Vienna University Of Technology</div>
+<div class="field"><span class="field-label">Emails:</span> lukas@anyline.com, lukas.kinigadner@anyline.io, lukas@anyline.io, lukas.kinigadner@anyline.com, l@anyline.com</div><div class="field"><span class="field-label">Phones:</span> +436605671549, +19029326259, +431386525222, +18573536748</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Fullcontact Support</div>
+                <div class="field"><span class="field-label">Organization:</span> Fullcontact</div>
+<div class="field"><span class="field-label">Emails:</span> lukas@anyline.com</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Lukas Kinigadner</div>
+                <div class="field"><span class="field-label">Organization:</span> 9yards</div>
+<div class="field"><span class="field-label">Emails:</span> lukas@anyline.com, lukas.kinigadner@anyline.io, lukas@anyline.io, lukas.kinigadner@anyline.com, l@anyline.com</div><div class="field"><span class="field-label">Phones:</span> +19029326259, +436642819159, +431386525222, +436605671549, +18573536748</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Suggested</div>
+                <div class="field"><span class="field-label">Name:</span> Lukas Kinigadner</div>
+                <div class="field"><span class="field-label">Organization:</span> 9yards</div>
+<div class="field"><span class="field-label">Emails:</span> lukas@anyline.com, lukas.kinigadner@anyline.io, lukas@anyline.io, lukas.kinigadner@anyline.com, l@anyline.com</div><div class="field"><span class="field-label">Phones:</span> +431386525222, +436605671549, +19029326259, +436642819159, +18573536748</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 5)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 5)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-6">
+            <div class="confidence high-conf">Confidence: 85%</div>
+            <h3>Potential Match #7</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> email<br>
+                <strong>Match Value:</strong> a.witte@controlexpert.com
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Andreas Witte</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> a.witte@controlexpert.com</div><div class="field"><span class="field-label">Phones:</span> +491638498684</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Andreas Witte (a.witte@controlexpert.com)</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> a.witte@controlexpert.com, costerland@generalatlantic.com</div><div class="field"><span class="field-label">Phones:</span> +491638498684</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Suggested</div>
+                <div class="field"><span class="field-label">Name:</span> Andreas Witte (a.witte@controlexpert.com)</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Emails:</span> a.witte@controlexpert.com, costerland@generalatlantic.com</div><div class="field"><span class="field-label">Phones:</span> +491638498684</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 6)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 6)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-7">
+            <div class="confidence high-conf">Confidence: 90%</div>
+            <h3>Potential Match #8</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> phone<br>
+                <strong>Match Value:</strong> +436506804060
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Brötzi</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +436506804060</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Simon Boetz</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +436506804060</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 7)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 7)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-8">
+            <div class="confidence high-conf">Confidence: 90%</div>
+            <h3>Potential Match #9</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> phone<br>
+                <strong>Match Value:</strong> 6603454304
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Ingrid Haus</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> 00436603454304</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Inge</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> 06603454304</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 8)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 8)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-9">
+            <div class="confidence high-conf">Confidence: 90%</div>
+            <h3>Potential Match #10</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> phone<br>
+                <strong>Match Value:</strong> +4369911119595
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Rainer</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +4369911119595</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Rainer Bräuer</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +4369911119595</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 9)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 9)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-10">
+            <div class="confidence high-conf">Confidence: 90%</div>
+            <h3>Potential Match #11</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> phone<br>
+                <strong>Match Value:</strong> +43660557651
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Lukas Stühlinger</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +43660557651</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Contact +43660557651</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +43660557651</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Contact +43660557651</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +43660557651</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 10)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 10)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-11">
+            <div class="confidence high-conf">Confidence: 90%</div>
+            <h3>Potential Match #12</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> phone<br>
+                <strong>Match Value:</strong> +436765174080
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Contact +436765174080</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +436765174080</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Tanja Gaumannmüller</div>
+                <div class="field"><span class="field-label">Organization:</span> Ak100</div>
+<div class="field"><span class="field-label">Phones:</span> +436765174080</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 11)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 11)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-12">
+            <div class="confidence high-conf">Confidence: 90%</div>
+            <h3>Potential Match #13</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> phone<br>
+                <strong>Match Value:</strong> +436603454304
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Ingrid</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +436603454304</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Ingrid Haus</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +436603454304</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Inge</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +436603454304</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 12)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 12)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+        <div class="match-group" id="group-13">
+            <div class="confidence high-conf">Confidence: 90%</div>
+            <h3>Potential Match #14</h3>
+            
+            <div class="match-reason">
+                <strong>Match Type:</strong> phone<br>
+                <strong>Match Value:</strong> +436602008325
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: Sara Export</div>
+                <div class="field"><span class="field-label">Name:</span> Bio-Meisel Kulturwirtshaus</div>
+                <div class="field"><span class="field-label">Organization:</span> Bio-meisel Kulturwirtshaus</div>
+<div class="field"><span class="field-label">Phones:</span> +436602008325</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Contact +436602008325</div>
+                <div class="field"><span class="field-label">Organization:</span> No organization</div>
+<div class="field"><span class="field-label">Phones:</span> +436602008325</div>
+            </div>
+
+            <div class="contact">
+                <div class="source">Source: iPhone Contacts</div>
+                <div class="field"><span class="field-label">Name:</span> Bio-Meisel Kulturwirtshaus</div>
+                <div class="field"><span class="field-label">Organization:</span> Bio-meisel Kulturwirtshaus</div>
+<div class="field"><span class="field-label">Phones:</span> +436602008325</div>
+            </div>
+
+            <div class="actions">
+                <button class="merge-btn" onclick="markDecision('merge', 13)">MERGE</button>
+                <button class="separate-btn" onclick="markDecision('separate', 13)">KEEP SEPARATE</button>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        function markDecision(decision, groupId) {
+            const group = document.getElementById('group-' + groupId);
+            group.style.opacity = '0.5';
+            group.setAttribute('data-decision', decision);
+            
+            // In real implementation, would save to file
+            console.log('Group ' + groupId + ': ' + decision);
+        }
+    </script>
+
+    <script>
+        let decisions = {};
+        let totalGroups = document.querySelectorAll('.merge-group').length;
+        
+        function makeDecision(groupId, decision) {
+            decisions[groupId] = decision;
+            
+            // Update UI
+            const group = document.getElementById('group-' + groupId);
+            group.classList.add('decided');
+            group.style.opacity = '0.6';
+            
+            // Save decisions immediately
+            saveDecisions();
+            
+            // Update progress
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const completed = Object.keys(decisions).length;
+            const percentage = (completed / totalGroups) * 100;
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = completed + ' / ' + totalGroups + ' decisions made';
+            
+            if (completed === totalGroups) {
+                // Auto-export when complete
+                exportDecisionsToFile();
+            }
+        }
+        
+        function saveDecisions() {
+            // Save to localStorage
+            localStorage.setItem('merge_decisions', JSON.stringify(decisions));
+            
+            // Also update the decisions display
+            const decisionsDisplay = document.getElementById('decisionsDisplay');
+            if (decisionsDisplay) {
+                decisionsDisplay.textContent = JSON.stringify(decisions, null, 2);
+            }
+        }
+        
+        function exportDecisionsToFile() {
+            const dataStr = JSON.stringify(decisions, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            // Auto-download
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'merge_decisions_auto.json';
+            link.click();
+            
+            // Show completion message
+            document.getElementById('completionMessage').style.display = 'block';
+        }
+        
+        // Load any existing decisions
+        window.onload = function() {
+            const saved = localStorage.getItem('merge_decisions');
+            if (saved) {
+                decisions = JSON.parse(saved);
+                updateProgress();
+            }
+        };
+    </script>
+    
+    <div style="position: fixed; top: 0; left: 0; right: 0; height: 4px; background: #ddd;">
+        <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); width: 0; transition: width 0.3s;"></div>
+    </div>
+    
+    <div style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 10px;">
+        <div id="progressText">0 / 14 decisions made</div>
+        <button onclick="exportDecisionsToFile()" style="margin-top: 10px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Export Decisions Now
+        </button>
+    </div>
+    
+    <div id="completionMessage" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #27ae60; color: white; padding: 30px; border-radius: 10px; font-size: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        ✅ All decisions complete! File downloaded as merge_decisions_auto.json
+    </div>
+    
+    <div style="position: fixed; bottom: 20px; left: 20px; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; max-width: 400px; max-height: 300px; overflow: auto;">
+        <h4>Current Decisions (Live Update):</h4>
+        <pre id="decisionsDisplay" style="font-size: 12px;">{}</pre>
+    </div>
+    </body>
+</html>

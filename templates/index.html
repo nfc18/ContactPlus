@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Contact Cleaner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Contact Review Dashboard</h1>
+        <p class="lead">Review and clean Sara's contact database</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Contacts</h5>
+                <h2>{{ analysis_stats.total_contacts or 'N/A' }}</h2>
+                <p class="mb-0">In database</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title">Need Review</h5>
+                <h2>{{ total_items }}</h2>
+                <p class="mb-0">Contacts with issues</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Reviewed</h5>
+                <h2>{{ reviewed }}</h2>
+                <p class="mb-0">Decisions made</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if analysis_stats %}
+<div class="row mt-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Database Statistics</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><strong>Contacts with Email:</strong> {{ analysis_stats.emails.contacts_with_email }}</li>
+                    <li><strong>Contacts with Phone:</strong> {{ analysis_stats.phones.contacts_with_phone }}</li>
+                    <li><strong>Contacts with Photo:</strong> {{ analysis_stats.photos.contacts_with_photo }}</li>
+                    <li><strong>Contacts with Organization:</strong> {{ analysis_stats.organizations.contacts_with_org }}</li>
+                    <li class="mt-2"><strong>Contacts with 4+ Emails:</strong> <span class="text-danger">{{ analysis_stats.emails.contacts_with_4plus_emails }}</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Top Email Domains</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    {% for domain, count in analysis_stats.top_domains[:5] %}
+                    <li><strong>{{ domain }}:</strong> {{ count }} contacts</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-lg-12">
+        {% if pending > 0 %}
+        <a href="{{ url_for('review') }}" class="btn btn-primary btn-lg">
+            Start Review ({{ pending }} remaining)
+        </a>
+        {% else %}
+        <a href="{{ url_for('complete') }}" class="btn btn-success btn-lg">
+            View Results
+        </a>
+        {% endif %}
+        
+        {% if not analysis_stats %}
+        <div class="alert alert-warning mt-3">
+            <strong>Note:</strong> Run <code>python analyze_contacts.py</code> first to analyze the database.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

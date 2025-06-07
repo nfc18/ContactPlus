@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Review Complete - Contact Cleaner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4">✅ Review Complete!</h1>
+        <p class="lead">You have reviewed all {{ reviewed }} contacts with issues.</p>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5>Decision Summary</h5>
+                <ul class="list-unstyled mt-3">
+                    {% for action, count in decision_counts.items() %}
+                    <li>
+                        {% if action == 'keep_all' %}
+                        <strong>Kept All Emails:</strong> {{ count }} contacts
+                        {% elif action == 'select_primary' %}
+                        <strong>Selected Primary Email:</strong> {{ count }} contacts
+                        {% elif action == 'remove_selected' %}
+                        <strong>Removed Selected Emails:</strong> {{ count }} contacts
+                        {% elif action == 'split_contact' %}
+                        <strong>Split Contacts:</strong> {{ count }} contacts
+                        {% elif action == 'skip' %}
+                        <strong>Skipped:</strong> {{ count }} contacts
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h5>Next Steps</h5>
+            <p>Your review decisions have been saved. You can now apply these changes to create a cleaned vCard file.</p>
+            
+            <button class="btn btn-success btn-lg mt-3" onclick="applyChanges()">
+                Apply Changes & Export Clean vCard
+            </button>
+            
+            <div class="mt-3">
+                <a href="/" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function applyChanges() {
+    if (!confirm('This will create a new cleaned vCard file. Continue?')) {
+        return;
+    }
+    
+    fetch('/api/apply-changes', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message || 'Changes applied successfully!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('This feature will be implemented in Phase 1E');
+    });
+}
+</script>
+{% endblock %}

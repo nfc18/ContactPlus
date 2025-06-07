@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "apple-mcp": {
+      "command": "bun",
+      "args": ["run", "/Users/lk/Documents/Developer/Private/ContactPlus/apple-mcp/index.ts"],
+      "cwd": "/Users/lk/Documents/Developer/Private/ContactPlus/apple-mcp"
+    }
+  }
+}

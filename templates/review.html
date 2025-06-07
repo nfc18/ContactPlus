@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Review Contact - Contact Cleaner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Contact Review</h1>
+            <div class="text-muted">
+                {{ reviewed + 1 }} of {{ total }} ({{ ((reviewed + 1) / total * 100)|round|int }}%)
+            </div>
+        </div>
+        <div class="progress mt-2" style="height: 20px;">
+            <div class="progress-bar bg-success" role="progressbar" 
+                 style="width: {{ ((reviewed + 1) / total * 100)|round|int }}%">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">⚠️ Review Required</h5>
+            </div>
+            <div class="card-body">
+                <h3>{{ contact.formatted_name or 'No Name' }}</h3>
+                {% if contact.organizations %}
+                <p class="text-muted">{{ contact.organizations|join(', ') }}</p>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <h5>📧 Email Addresses ({{ contact.email_count }})</h5>
+                    <div class="list-group" id="email-list">
+                        {% for email in contact.emails %}
+                        <div class="list-group-item">
+                            <div class="form-check">
+                                <input class="form-check-input email-checkbox" type="checkbox" 
+                                       value="{{ email.address }}" id="email{{ loop.index }}"
+                                       data-index="{{ loop.index0 }}" checked>
+                                <label class="form-check-label w-100" for="email{{ loop.index }}">
+                                    {{ email.address }}
+                                    {% if loop.first %}
+                                    <span class="badge bg-primary ms-2">Primary</span>
+                                    {% endif %}
+                                    {% if email.type %}
+                                    <small class="text-muted">({{ email.type|join(', ') }})</small>
+                                    {% endif %}
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                {% if contact.phones %}
+                <div class="mt-3">
+                    <h5>📱 Phone Numbers</h5>
+                    <ul class="list-unstyled">
+                        {% for phone in contact.phones %}
+                        <li>{{ phone.number }} 
+                            {% if phone.type %}
+                            <small class="text-muted">({{ phone.type|join(', ') }})</small>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <h5>Issues Found</h5>
+                    <ul>
+                        {% for issue in contact.issues %}
+                        <li>
+                            {% if issue.type == 'too_many_emails' %}
+                            Too many email addresses ({{ issue.count }})
+                            {% elif issue.type == 'mixed_domains' %}
+                            Mixed email domains ({{ issue.domain_count }} different domains)
+                            {% else %}
+                            {{ issue.type }}
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="mt-4 d-grid gap-2">
+                    <button class="btn btn-success" onclick="submitDecision('keep_all')">
+                        ✓ Keep All Emails
+                    </button>
+                    <button class="btn btn-primary" onclick="submitDecision('select_primary')">
+                        ⭐ Select Primary Email Only
+                    </button>
+                    <button class="btn btn-warning" onclick="submitDecision('remove_selected')">
+                        ✂️ Remove Unchecked Emails
+                    </button>
+                    <button class="btn btn-danger" onclick="submitDecision('split_contact')">
+                        🔀 Split Into Multiple Contacts
+                    </button>
+                    <button class="btn btn-secondary" onclick="submitDecision('skip')">
+                        ⏭️ Skip For Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const contactId = "{{ contact.id }}";
+
+function submitDecision(action) {
+    let details = {};
+    
+    if (action === 'select_primary') {
+        // First email is primary
+        details.primary_email = "{{ contact.emails[0].address }}";
+        details.removed_emails = {{ contact.emails[1:] | map(attribute='address') | list | tojson }};
+    } else if (action === 'remove_selected') {
+        // Get unchecked emails
+        const uncheckedEmails = [];
+        const checkedEmails = [];
+        document.querySelectorAll('.email-checkbox').forEach(checkbox => {
+            if (!checkbox.checked) {
+                uncheckedEmails.push(checkbox.value);
+            } else {
+                checkedEmails.push(checkbox.value);
+            }
+        });
+        
+        if (checkedEmails.length === 0) {
+            alert('You must keep at least one email address!');
+            return;
+        }
+        
+        details.kept_emails = checkedEmails;
+        details.removed_emails = uncheckedEmails;
+    }
+    
+    // Submit decision
+    fetch('/api/decision', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            contact_id: contactId,
+            action: action,
+            details: details
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload page for next contact
+            window.location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving decision. Please try again.');
+    });
+}
+
+// Primary email selection
+document.querySelectorAll('.email-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('click', function(e) {
+        if (e.shiftKey) {
+            // Shift+click to make primary
+            document.querySelectorAll('.badge.bg-primary').forEach(badge => badge.remove());
+            const label = this.nextElementSibling;
+            label.innerHTML += ' <span class="badge bg-primary ms-2">Primary</span>';
+        }
+    });
+});
+</script>
+{% endblock %}

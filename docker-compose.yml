@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  contactplus-core:
+    build: ./contactplus-core
+    container_name: contactplus-core
+    ports:
+      - "8080:8080"
+    volumes:
+      - contact_data:/app/data
+      - contact_logs:/app/logs
+      - ./Imports:/app/imports:ro
+    environment:
+      - DATABASE_PATH=/app/data/master_database
+      - LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - contactplus-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+  contactplus-web:
+    build: ./contactplus-web
+    container_name: contactplus-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - contactplus-core
+    environment:
+      - REACT_APP_API_URL=http://contactplus-core:8080/api/v1
+    networks:
+      - contactplus-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+      
+  contactplus-monitor:
+    build: ./contactplus-monitor
+    container_name: contactplus-monitor
+    ports:
+      - "9090:9090"
+    depends_on:
+      - contactplus-core
+    networks:
+      - contactplus-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Dozzle for log management
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8081:8080"
+    environment:
+      DOZZLE_LEVEL: info
+      DOZZLE_TAILSIZE: 300
+      DOZZLE_FILTER: "name=contactplus*"
+    networks:
+      - contactplus-network
+
+volumes:
+  contact_data:
+    driver: local
+  contact_logs:
+    driver: local
+
+networks:
+  contactplus-network:
+    driver: bridge

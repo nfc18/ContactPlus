@@ -1,0 +1,237 @@
+name: ContactPlus Integration Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+        
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+    
+    - name: Create test data directory
+      run: mkdir -p tests/test_data
+      
+    - name: Build Docker images
+      run: |
+        docker-compose build --parallel
+        
+    - name: Start ContactPlus services
+      run: |
+        docker-compose up -d
+        
+    - name: Wait for services to be ready
+      run: |
+        echo "Waiting for services to start..."
+        sleep 30
+        
+        # Wait for API to be ready
+        for i in {1..30}; do
+          if curl -f http://localhost:8080/api/v1/health > /dev/null 2>&1; then
+            echo "API is ready!"
+            break
+          fi
+          echo "Waiting for API... (attempt $i/30)"
+          sleep 10
+        done
+        
+        # Check all services
+        curl -f http://localhost:8080/api/v1/health || exit 1
+        curl -f http://localhost:3000 || exit 1
+        curl -f http://localhost:9090 || exit 1
+        curl -f http://localhost:8081 || exit 1
+        
+    - name: Run comprehensive integration tests
+      run: |
+        cd tests
+        python integration_test_suite.py --timeout 300
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-results
+        path: tests/test_data/integration_test_report.json
+        retention-days: 30
+        
+    - name: Upload test data
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-data
+        path: tests/test_data/
+        retention-days: 7
+        
+    - name: Collect Docker logs
+      if: failure()
+      run: |
+        mkdir -p logs
+        docker-compose logs contactplus-core > logs/core.log
+        docker-compose logs contactplus-web > logs/web.log
+        docker-compose logs contactplus-monitor > logs/monitor.log
+        docker-compose logs dozzle > logs/dozzle.log
+        
+    - name: Upload Docker logs
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: docker-logs
+        path: logs/
+        retention-days: 7
+        
+    - name: Generate test summary
+      if: always()
+      run: |
+        if [ -f tests/test_data/integration_test_report.json ]; then
+          echo "## Integration Test Results" >> $GITHUB_STEP_SUMMARY
+          python -c "
+import json
+with open('tests/test_data/integration_test_report.json') as f:
+    data = json.load(f)
+    
+print(f'**Total Tests:** {data[\"total_tests\"]}')
+print(f'**Passed:** {data[\"passed_tests\"]} ✅')
+print(f'**Failed:** {data[\"failed_tests\"]} ❌')
+print(f'**Success Rate:** {data[\"success_rate\"]*100:.1f}%')
+print('')
+print('### Results by Category:')
+for category, stats in data['categories'].items():
+    rate = stats['passed'] / stats['total'] * 100
+    status = '✅' if rate >= 80 else '⚠️' if rate >= 60 else '❌'
+    print(f'- {status} **{category.title()}:** {stats[\"passed\"]}/{stats[\"total\"]} ({rate:.1f}%)')
+
+if data['failed_tests'] > 0:
+    print('')
+    print('### Failed Tests:')
+    for result in data['results']:
+        if not result['success']:
+            print(f'- ❌ {result[\"test\"]}: {result[\"details\"]}')
+          "
+        fi
+        
+    - name: Stop services
+      if: always()
+      run: |
+        docker-compose down -v
+        
+    - name: Clean up Docker
+      if: always()
+      run: |
+        docker system prune -f
+        
+  performance-tests:
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    if: github.ref == 'refs/heads/main'
+    timeout-minutes: 20
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests locust
+        
+    - name: Start ContactPlus services
+      run: |
+        docker-compose up -d
+        sleep 60  # Extended wait for performance testing
+        
+    - name: Run performance tests
+      run: |
+        # Create a simple Locust performance test
+        cat > performance_test.py << 'EOF'
+from locust import HttpUser, task, between
+import random
+
+class ContactPlusUser(HttpUser):
+    wait_time = between(1, 3)
+    
+    def on_start(self):
+        # Check if API is ready
+        self.client.get("/api/v1/health")
+    
+    @task(3)
+    def get_health(self):
+        self.client.get("/api/v1/health")
+    
+    @task(2)
+    def get_stats(self):
+        self.client.get("/api/v1/stats")
+    
+    @task(2)
+    def list_contacts(self):
+        page = random.randint(1, 10)
+        self.client.get(f"/api/v1/contacts?page={page}&page_size=10")
+    
+    @task(1)
+    def search_contacts(self):
+        queries = ["john", "test", "@", "+", "corp"]
+        query = random.choice(queries)
+        self.client.get(f"/api/v1/contacts/search?query={query}")
+EOF
+        
+        # Run performance test
+        locust -f performance_test.py --host http://localhost:8080 \
+               --users 10 --spawn-rate 2 --run-time 300s --headless \
+               --html performance_report.html
+        
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-test-results
+        path: performance_report.html
+        retention-days: 30
+        
+    - name: Stop services
+      if: always()
+      run: docker-compose down -v

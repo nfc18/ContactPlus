@@ -1,0 +1,20 @@
+{
+  "0": "separate",
+  "1": "separate",
+  "2": "merge",
+  "3": "separate",
+  "4": "merge",
+  "5": "special_delete_merge",
+  "6": "merge",
+  "7": "delete_both",
+  "8": "merge",
+  "9": "merge",
+  "10": "merge",
+  "11": "merge",
+  "12": "merge",
+  "13": "merge",
+  "notes": {
+    "5": "Delete 'Fullcontact Support', merge the 3 Lukas Kinigadner entries",
+    "7": "Delete both contacts"
+  }
+}
