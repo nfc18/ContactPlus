@@ -1,0 +1,78 @@
+name: Simple ContactPlus Deployment
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+        
+    - name: Build Docker images
+      run: |
+        echo "🔨 Building ContactPlus Docker images..."
+        docker-compose build --parallel
+        
+    - name: Run integration tests
+      run: |
+        echo "🧪 Running integration tests..."
+        
+        # Start services for testing
+        docker-compose up -d
+        
+        # Wait for services
+        echo "⏳ Waiting for services to be ready..."
+        sleep 30
+        
+        # Quick health check
+        timeout 60 bash -c 'until curl -f -s http://localhost:8080/api/v1/health > /dev/null 2>&1; do sleep 5; done'
+        
+        if curl -f -s http://localhost:8080/api/v1/health > /dev/null 2>&1; then
+          echo "✅ Services are healthy!"
+        else
+          echo "❌ Services failed health check"
+          docker-compose logs
+          exit 1
+        fi
+        
+        # Stop test services
+        docker-compose down
+        
+    - name: Deployment Summary
+      run: |
+        echo "📋 Deployment Summary"
+        echo "===================="
+        echo "✅ Build completed successfully"
+        echo "✅ Integration tests passed"
+        echo "📅 Built at: $(date)"
+        echo "🔗 Repository: https://github.com/nfc18/ContactPlus"
+        echo ""
+        echo "🚀 To deploy locally on your Mac:"
+        echo "   cd ~/Documents/Developer/Private/ContactPlus"
+        echo "   git pull origin main"
+        echo "   docker-compose up -d"
+        echo ""
+        echo "📊 Services will be available at:"
+        echo "   - Web Interface: http://localhost:3000"
+        echo "   - API Documentation: http://localhost:8080/docs"
+        echo "   - System Monitor: http://localhost:9090"
+        echo "   - Live Logs: http://localhost:8081"
