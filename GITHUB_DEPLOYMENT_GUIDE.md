@@ -21,7 +21,7 @@ git add .
 git commit -m "Initial ContactPlus MVP commit"
 
 # Create repository on GitHub and push
-git remote add origin https://github.com/YOUR_USERNAME/ContactPlus.git
+git remote add origin https://github.com/nfc18/ContactPlus.git
 git branch -M main
 git push -u origin main
 ```
@@ -61,7 +61,7 @@ cd /Users/lk/Documents/Developer/Private/ContactPlus
 3. **Configure the runner**
    ```bash
    cd ~/actions-runner
-   ./config.sh --url https://github.com/YOUR_USERNAME/ContactPlus --token YOUR_TOKEN
+   ./config.sh --url https://github.com/nfc18/ContactPlus --token YOUR_TOKEN
    ```
    
 4. **Runner configuration prompts**:
@@ -127,7 +127,7 @@ git commit -m "Update ContactPlus features"
 git push origin main
 
 # Deployment starts automatically
-# Watch progress at: https://github.com/YOUR_USERNAME/ContactPlus/actions
+# Watch progress at: https://github.com/nfc18/ContactPlus/actions
 ```
 
 ### Manual Deployment
@@ -336,7 +336,7 @@ Once setup is complete:
 
 ## 📞 **Quick Reference**
 
-**GitHub Repository**: https://github.com/YOUR_USERNAME/ContactPlus  
+**GitHub Repository**: https://github.com/nfc18/ContactPlus  
 **Web Interface**: http://localhost:3000  
 **API Docs**: http://localhost:8080/docs  
 **System Monitor**: http://localhost:9090  

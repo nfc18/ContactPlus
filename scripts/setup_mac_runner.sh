@@ -11,7 +11,7 @@ echo "============================================================="
 # Configuration
 RUNNER_VERSION="2.311.0"
 RUNNER_DIR="$HOME/actions-runner"
-REPO_URL="https://github.com/YOUR_USERNAME/ContactPlus"  # Update this with your GitHub repo
+REPO_URL="https://github.com/nfc18/ContactPlus"
 
 # Colors for output
 RED='\033[0;31m'
